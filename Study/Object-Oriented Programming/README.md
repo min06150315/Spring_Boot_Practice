@@ -34,27 +34,27 @@ Spring Framework는 자바의 객체지향 프로그래밍(OOP) 원칙을 바탕
 
 ## 2. SOLID 원칙
 
-### 2.1 단일 책임 원칙 (Single Responsibility Principle)
+### 2.1 단일 책임 원칙 (SRP, Single Responsibility Principle)
 
 - **정의**: 클래스는 하나의 책임만 가지며, 변경 사유도 하나여야 한다.
 - **스프링과의 연관성**: 각각의 서비스, 레포지토리, 컨트롤러 클래스는 특정한 책임에 맞게 역할을 분담.
 
-### 2.2 개방-폐쇄 원칙 (Open-Closed Principle)
+### 2.2 개방-폐쇄 원칙 (OCP, Open/Closed Principle)
 
 - **정의**: 소프트웨어 요소는 확장에는 열려 있어야 하지만, 수정에는 닫혀 있어야 한다.
 - **스프링과의 연관성**: 새로운 기능은 확장하고 기존 코드는 변경 없이 재사용 가능한 구조를 갖추어 DI를 통해 적용.
 
-### 2.3 리스코프 치환 원칙 (Liskov Substitution Principle)
+### 2.3 리스코프 치환 원칙 (LSP, Liskov Substitution Principle)
 
 - **정의**: 자식 클래스는 언제나 부모 클래스를 대체할 수 있어야 한다.
 - **스프링과의 연관성**: 인터페이스를 통한 의존성 주입으로 자식 객체의 유연한 대체 가능.
 
-### 2.4 인터페이스 분리 원칙 (Interface Segregation Principle)
+### 2.4 인터페이스 분리 원칙 (ISP, Interface Segregation Principle)
 
 - **정의**: 클라이언트는 자신이 사용하지 않는 메서드에 의존하지 않도록 인터페이스를 분리해야 한다.
 - **스프링과의 연관성**: 필요한 기능별로 인터페이스를 나누어 의존성 주입 시 불필요한 의존성을 줄임.
 
-### 2.5 의존 역전 원칙 (Dependency Inversion Principle)
+### 2.5 의존 역전 원칙 (DIP, Dependency Inversion Principle)
 
 - **정의**: 고수준 모듈은 저수준 모듈에 의존해서는 안 되며, 둘 다 추상화에 의존해야 한다.
 - **스프링과의 연관성**: DI 컨테이너를 통한 의존성 주입으로 객체 간의 결합도를 낮춤.

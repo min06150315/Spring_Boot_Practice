@@ -1,6 +1,4 @@
-# Java Object-Oriented Concepts for Spring
-
-Spring Framework는 자바의 객체지향 프로그래밍(OOP) 원칙을 바탕으로 설계되어 있습니다. 스프링을 잘 활용하기 위해 알아두면 좋은 필수 자바 객체지향 개념을 정리합니다.
+# Java Object-Oriented Concepts for Spring Boot
 
 ---
 
@@ -9,26 +7,108 @@ Spring Framework는 자바의 객체지향 프로그래밍(OOP) 원칙을 바탕
 ### 1.1 캡슐화 (Encapsulation)
 
 - **정의**: 객체의 데이터와 메서드를 하나로 묶어 외부에서 직접 접근하지 못하도록 제한하는 기법.
-- **예시**: 클래스에서 `private` 키워드를 사용하여 필드에 직접 접근하지 않고, `getter`와 `setter` 메서드로 필드를 제어.
-- **스프링과의 연관성**: 빈(Bean)의 `@Autowired` 및 `@Configuration`을 통해 객체를 캡슐화하고, 필요한 부분에서만 접근.
+- **예시 코드**:
+
+  ```java
+  public class User {
+      private String name; // 외부에서 직접 접근 불가
+      private int age;
+
+      // Getter와 Setter로 간접 접근
+      public String getName() {
+          return name;
+      }
+
+      public void setName(String name) {
+          this.name = name;
+      }
+
+      public int getAge() {
+          return age;
+      }
+
+      public void setAge(int age) {
+          if (age >= 0) this.age = age; // 유효성 검사를 통한 보호
+      }
+  }
+  ```
 
 ### 1.2 상속 (Inheritance)
 
 - **정의**: 부모 클래스의 속성과 메서드를 자식 클래스에서 물려받아 재사용하거나 확장하는 기법.
-- **예시**: `extends` 키워드를 사용하여 클래스를 확장.
-- **스프링과의 연관성**: DI와 AOP에서 공통 기능을 상속 구조로 추상화하여 사용함으로써 코드 중복을 줄임.
+- **예시 코드**:
+
+  ```java
+  public class Animal {
+      public void makeSound() {
+          System.out.println("Some sound...");
+      }
+  }
+
+  public class Dog extends Animal {
+      @Override
+      public void makeSound() {
+          System.out.println("Bark!");
+      }
+  }
+
+  // 사용 예시
+  Animal animal = new Dog();
+  animal.makeSound(); // 출력: Bark!
+  ```
 
 ### 1.3 다형성 (Polymorphism)
 
 - **정의**: 같은 메서드를 호출해도 객체 타입에 따라 다른 동작을 수행하도록 하는 기법.
-- **예시**: 인터페이스 또는 상위 클래스 타입으로 메서드를 호출하여 다양한 하위 클래스의 구현을 사용.
-- **스프링과의 연관성**: `@Autowired`를 통해 인터페이스로 의존성 주입을 할 때, 다양한 구현체를 주입하여 다형성을 실현.
+- **예시 코드**:
+
+  ```java
+  public interface Shape {
+      void draw();
+  }
+
+  public class Circle implements Shape {
+      @Override
+      public void draw() {
+          System.out.println("Drawing a circle");
+      }
+  }
+
+  public class Square implements Shape {
+      @Override
+      public void draw() {
+          System.out.println("Drawing a square");
+      }
+  }
+
+  // 사용 예시
+  Shape shape = new Circle();
+  shape.draw(); // 출력: Drawing a circle
+  shape = new Square();
+  shape.draw(); // 출력: Drawing a square
+  ```
 
 ### 1.4 추상화 (Abstraction)
 
 - **정의**: 객체의 복잡한 내부 구현은 숨기고 필요한 기능만 외부에 노출하는 기법.
-- **예시**: 인터페이스나 추상 클래스에서 메서드의 뼈대를 정의하고, 구체적인 구현은 하위 클래스에 위임.
-- **스프링과의 연관성**: 서비스 계층에서 인터페이스를 활용해 구현을 분리하여 유연성을 확보.
+- **예시 코드**:
+
+  ```java
+  public abstract class Payment {
+      public abstract void processPayment(double amount);
+  }
+
+  public class CreditCardPayment extends Payment {
+      @Override
+      public void processPayment(double amount) {
+          System.out.println("Processing credit card payment: $" + amount);
+      }
+  }
+
+  // 사용 예시
+  Payment payment = new CreditCardPayment();
+  payment.processPayment(100.0); // 출력: Processing credit card payment: $100.0
+  ```
 
 ---
 
@@ -37,27 +117,151 @@ Spring Framework는 자바의 객체지향 프로그래밍(OOP) 원칙을 바탕
 ### 2.1 단일 책임 원칙 (SRP, Single Responsibility Principle)
 
 - **정의**: 클래스는 하나의 책임만 가지며, 변경 사유도 하나여야 한다.
-- **스프링과의 연관성**: 각각의 서비스, 레포지토리, 컨트롤러 클래스는 특정한 책임에 맞게 역할을 분담.
+- **예시 코드**:
 
-### 2.2 개방-폐쇄 원칙 (OCP, Open/Closed Principle)
+  ```java
+  public class User {
+      private String name;
+      private String email;
+      // getter/setter 메서드
+  }
+
+  public class UserRepository {
+      public void saveUser(User user) {
+          // 사용자 데이터를 저장하는 책임
+      }
+  }
+
+  public class UserService {
+      public void registerUser(User user) {
+          // 사용자 등록 로직
+      }
+  }
+  ```
+
+### 2.2 개방-폐쇄 원칙 (OCP, Open-Closed Principle)
 
 - **정의**: 소프트웨어 요소는 확장에는 열려 있어야 하지만, 수정에는 닫혀 있어야 한다.
-- **스프링과의 연관성**: 새로운 기능은 확장하고 기존 코드는 변경 없이 재사용 가능한 구조를 갖추어 DI를 통해 적용.
+- **예시 코드**:
+
+  ```java
+  public interface NotificationService {
+      void sendNotification(String message);
+  }
+
+  public class EmailNotificationService implements NotificationService {
+      @Override
+      public void sendNotification(String message) {
+          System.out.println("Sending email: " + message);
+      }
+  }
+
+  public class SmsNotificationService implements NotificationService {
+      @Override
+      public void sendNotification(String message) {
+          System.out.println("Sending SMS: " + message);
+      }
+  }
+
+  // 새로운 서비스 추가 시 기존 코드를 수정할 필요 없이 구현체를 추가할 수 있음
+  ```
 
 ### 2.3 리스코프 치환 원칙 (LSP, Liskov Substitution Principle)
 
 - **정의**: 자식 클래스는 언제나 부모 클래스를 대체할 수 있어야 한다.
-- **스프링과의 연관성**: 인터페이스를 통한 의존성 주입으로 자식 객체의 유연한 대체 가능.
+- **예시 코드**:
+
+  ```java
+  public class Rectangle {
+      protected int width, height;
+
+      public void setWidth(int width) {
+          this.width = width;
+      }
+
+      public void setHeight(int height) {
+          this.height = height;
+      }
+
+      public int getArea() {
+          return width * height;
+      }
+  }
+
+  public class Square extends Rectangle {
+      @Override
+      public void setWidth(int width) {
+          this.width = this.height = width;
+      }
+
+      @Override
+      public void setHeight(int height) {
+          this.width = this.height = height;
+      }
+  }
+  ```
 
 ### 2.4 인터페이스 분리 원칙 (ISP, Interface Segregation Principle)
 
 - **정의**: 클라이언트는 자신이 사용하지 않는 메서드에 의존하지 않도록 인터페이스를 분리해야 한다.
-- **스프링과의 연관성**: 필요한 기능별로 인터페이스를 나누어 의존성 주입 시 불필요한 의존성을 줄임.
+- **예시 코드**:
+
+  ```java
+  public interface Workable {
+      void work();
+  }
+
+  public interface Eatable {
+      void eat();
+  }
+
+  public class Worker implements Workable, Eatable {
+      @Override
+      public void work() {
+          System.out.println("Working...");
+      }
+
+      @Override
+      public void eat() {
+          System.out.println("Eating...");
+      }
+  }
+  ```
 
 ### 2.5 의존 역전 원칙 (DIP, Dependency Inversion Principle)
 
 - **정의**: 고수준 모듈은 저수준 모듈에 의존해서는 안 되며, 둘 다 추상화에 의존해야 한다.
-- **스프링과의 연관성**: DI 컨테이너를 통한 의존성 주입으로 객체 간의 결합도를 낮춤.
+- **예시 코드**:
+
+  ```java
+  public interface Keyboard {
+      void type();
+  }
+
+  public class MechanicalKeyboard implements Keyboard {
+      @Override
+      public void type() {
+          System.out.println("Typing with mechanical keyboard");
+      }
+  }
+
+  public class Computer {
+      private Keyboard keyboard;
+
+      public Computer(Keyboard keyboard) {
+          this.keyboard = keyboard;
+      }
+
+      public void type() {
+          keyboard.type();
+      }
+  }
+
+  // 사용 예시
+  Keyboard keyboard = new MechanicalKeyboard();
+  Computer computer = new Computer(keyboard);
+  computer.type(); // 출력: Typing with mechanical keyboard
+  ```
 
 ---
 
@@ -66,28 +270,87 @@ Spring Framework는 자바의 객체지향 프로그래밍(OOP) 원칙을 바탕
 ### 3.1 싱글톤 패턴 (Singleton Pattern)
 
 - **정의**: 애플리케이션에서 하나의 인스턴스만 생성하도록 제한하는 패턴.
-- **스프링과의 연관성**: 스프링 컨테이너는 기본적으로 빈을 싱글톤으로 관리 (`@Scope("singleton")`).
+- **예시 코드**:
+
+  ```java
+  public class Singleton {
+      private static Singleton instance;
+
+      private Singleton() {} // 생성자를 private으로 제한
+
+      public static Singleton getInstance() {
+          if (instance == null) {
+              instance = new Singleton();
+          }
+          return instance;
+      }
+  }
+  ```
 
 ### 3.2 팩토리 패턴 (Factory Pattern)
 
 - **정의**: 객체 생성 로직을 별도의 클래스로 분리하여 객체 생성 방법을 캡슐화.
-- **스프링과의 연관성**: 스프링에서 빈 팩토리를 사용하여 객체를 생성하고 의존성 주입.
+- **예시 코드**:
+
+  ```java
+  public interface Product {
+      void create();
+  }
+
+  public class ConcreteProductA implements Product {
+      @Override
+      public void create() {
+          System.out.println("Creating Product A");
+      }
+  }
+
+  public class ProductFactory {
+      public static Product createProduct(String type) {
+          if (type.equals("A")) {
+              return new ConcreteProductA();
+          }
+          return null;
+      }
+  }
+
+  // 사용 예시
+  Product product = ProductFactory.createProduct("A");
+  product.create(); // 출력: Creating Product A
+  ```
 
 ### 3.3 프록시 패턴 (Proxy Pattern)
 
 - **정의**: 특정 객체에 접근하는 방법을 제어하기 위해 대리 객체(프록시)를 사용하는 패턴.
-- **스프링과의 연관성**: AOP를 통해 프록시 객체를 활용하여 횡단 관심사 (트랜잭션, 로깅 등)를 관리.
+- **예시 코드**:
 
----
+  ```java
+  public interface Service {
+      void request();
+  }
 
-## 4. 기타 개념
+  public class RealService implements Service {
+      @Override
+      public void request() {
+          System.out.println("Executing request in RealService");
+      }
+  }
 
-### 4.1 의존성 주입 (Dependency Injection)
+  public class ProxyService implements Service {
+      private RealService realService;
 
-- **정의**: 객체가 자신이 사용할 객체를 직접 생성하지 않고 외부에서 주입받는 방식.
-- **스프링과의 연관성**: 스프링의 핵심 개념으로, `@Autowired`, 생성자 주입 등을 통해 객체 간 결합도를 낮춤.
+      @Override
+      public void request() {
+          if (realService == null) {
+              realService = new RealService();
+          }
+          System.out.println("Executing proxy logic before calling RealService");
+          realService.request();
+      }
+  }
 
-### 4.2 제어의 역전 (Inversion of Control)
+  // 사용 예시
+  Service service = new ProxyService();
+  service.request();
+  ```
 
-- **정의**: 프로그램의 흐름을 사용자가 제어하는 것이 아니라, 프레임워크가 제어하는 방식.
-- **스프링과의 연관성**: 스프링 컨테이너가 객체의 생명 주기를 관리하여, 개발자가 제어하지 않아도 객체 생성 및 소멸이 자동화됨.
+이 예제들을 통해 각 개념과 원칙을 더 잘 이해할 수 있을 것입니다.
